@@ -1,5 +1,9 @@
 # Gardner-Gram Full Stack Application
 
+![alt tag](https://i.imgur.com/eo8c5qk.png)
+
+
+
 # Description: 
 
 Created a web application that allows users to:
