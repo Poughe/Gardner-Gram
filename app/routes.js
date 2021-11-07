@@ -38,7 +38,12 @@ module.exports = function (app, passport, db, multer, ObjectId) {
     })
   });
   //post page
- 
+  app.get('/feedTwo', function (req, res) {
+    db.collection('posts').find().toArray((err, result) => {
+      if (err) return console.log(err)
+      res.send(result);
+    })
+  });
 
   app.get('/post/:zebra', isLoggedIn, function (req, res) {
     let postId = ObjectId(req.params.zebra)
@@ -84,6 +89,7 @@ module.exports = function (app, passport, db, multer, ObjectId) {
       caption: req.body.caption,
       img: 'images/uploads/' + req.file.filename,
       postedBy: user,
+      postedByUserName: req.user.username,
       likes: 0
     }, (err, result) => {
       if (err) return console.log(err)
@@ -186,10 +192,28 @@ module.exports = function (app, passport, db, multer, ObjectId) {
 
   // process the signup form
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/profile', // redirect to the secure profile section
+    // successRedirect: '/profile', // redirect to the secure profile section
     failureRedirect: '/signup', // redirect back to the signup page if there is an error
     failureFlash: true // allow flash messages
-  }));
+  }), function (req, res) {
+
+    db.collection('users')
+      .findOneAndUpdate({
+        _id: req.user._id
+      }, {
+        $set: {
+          username: req.body.username,
+        },
+
+      }, {
+        sort: { _id: -1 },
+        upsert: true
+      }, (err, result) => {
+        if (err) return res.send(err)
+        res.redirect('/profile');
+      })
+  })
+
 
   // =============================================================================
   // UNLINK ACCOUNTS =============================================================
@@ -206,7 +230,7 @@ module.exports = function (app, passport, db, multer, ObjectId) {
     user.save(function (err) {
       res.redirect('/profile');
     });
-  });
+  })
 
 };
 

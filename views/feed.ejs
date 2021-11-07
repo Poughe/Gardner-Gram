@@ -54,7 +54,7 @@
             <a href="/post/<%= posts[i]._id %>">
               <img src="<%= posts[i].img %>" alt="">
               <h4><%= posts[i].caption %></h4>
-              <a href="/page/<%= posts[i].postedBy %>">User: <%= posts[i].postedBy %></a>
+              <a href="/page/<%= posts[i].postedBy %>">User: <%= posts[i].postedByUserName %></a>
             </a>
             <div class="card-body">
               <a class="px-2" href="/post/<%= posts[i]._id %>"><i class="far fa-comment"></i></a>
